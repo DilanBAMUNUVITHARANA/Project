@@ -1,0 +1,54 @@
+/* Android Quiz App
+Created by Daniel and Dilan
+03/01/17*/
+
+
+package com.company.androidquizapp;
+
+
+public class Question   {
+
+    //fields for question object
+    private String Q;
+    private String OPTIONA;
+    private String OPTIONB;
+    private String OPTIONC;
+    private String A;
+
+    //question constructor
+    public Question(String q, String A, String B, String C, String a) {
+        Q = q;
+        OPTIONA = A;
+        OPTIONB = B;
+        OPTIONC = C;
+        A = a;
+
+    }
+
+    //Accessor question
+    public String getQUESTION() {
+        return Q;
+    }
+
+    //Accessor for options
+    public String getOPTA()
+    {
+        return OPTIONA;
+    }
+    public String getOPTB()
+    {
+        return OPTIONB;
+    }
+    public String getOPTC()
+    {
+        return OPTIONC;
+    }
+
+    //Accessor answer
+    public String getANSWER() {
+        return A;
+    }
+
+}
+
+
