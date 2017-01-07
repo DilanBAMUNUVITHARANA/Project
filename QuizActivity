@@ -1,0 +1,267 @@
+/* Android Quiz App
+Created by Daniel and Dilan
+03/01/17*/
+
+package com.company.androidquizapp;
+
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+
+
+public class QuizActivity extends AppCompatActivity {
+    public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+
+    private Button submitButton, buttonCheat1, buttonCheat2, buttonCheat3, buttonCheat4, buttonCheat5;
+
+    //array to hold the question objects
+    Question[] ques = {null, null, null, null, null};
+
+    String name;
+    int score = 0, cheats = 0;
+    boolean c1 = false, c2 = false, c3 = false, c4 = false, c5 = false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_quiz);
+
+        //reset
+        c1 = false;
+        c2 = false;
+        c3 = false;
+        c4 = false;
+        c5 = false;
+        cheats = 0;
+        score = 0;
+
+        //assign the question text views
+        TextView textViewQ1 = (TextView) findViewById(R.id.textViewQ1);
+        TextView textViewQ2 = (TextView) findViewById(R.id.textViewQ2);
+        TextView textViewQ3 = (TextView) findViewById(R.id.textViewQ3);
+        TextView textViewQ4 = (TextView) findViewById(R.id.textViewQ4);
+        TextView textViewQ5 = (TextView) findViewById(R.id.textViewQ5);
+
+        //assign cheat text views
+        final TextView textViewCheat1 = (TextView) findViewById(R.id.textViewCheat1);
+        final TextView textViewCheat2 = (TextView) findViewById(R.id.textViewCheat2);
+        final TextView textViewCheat3 = (TextView) findViewById(R.id.textViewCheat3);
+        final TextView textViewCheat4 = (TextView) findViewById(R.id.textViewCheat4);
+        final TextView textViewCheat5 = (TextView) findViewById(R.id.textViewCheat5);
+
+        //assign RadioGroup id
+        final RadioGroup Q1 = (RadioGroup) findViewById(R.id.Q1);
+        final RadioGroup Q2 = (RadioGroup) findViewById(R.id.Q2);
+        final RadioGroup Q3 = (RadioGroup) findViewById(R.id.Q3);
+        final RadioGroup Q4 = (RadioGroup) findViewById(R.id.Q4);
+        final RadioGroup Q5 = (RadioGroup) findViewById(R.id.Q5);
+
+        //assign radio buttons id
+        //Q1
+        RadioButton Q1_1 = (RadioButton) findViewById(R.id.radioButton1Q1);
+        final RadioButton Q1_2 = (RadioButton) findViewById(R.id.radioButton2Q1);
+        RadioButton Q1_3 = (RadioButton) findViewById(R.id.radioButton3Q1);
+        //Q2
+        RadioButton Q2_1 = (RadioButton) findViewById(R.id.radioButton1Q2);
+        final RadioButton Q2_2 = (RadioButton) findViewById(R.id.radioButton2Q2);
+        RadioButton Q2_3 = (RadioButton) findViewById(R.id.radioButton3Q2);
+        //Q3
+        RadioButton Q3_1 = (RadioButton) findViewById(R.id.radioButton1Q3);
+        RadioButton Q3_2 = (RadioButton) findViewById(R.id.radioButton2Q3);
+        final RadioButton Q3_3 = (RadioButton) findViewById(R.id.radioButton3Q3);
+        //Q4
+        final RadioButton Q4_1 = (RadioButton) findViewById(R.id.radioButton1Q4);
+        RadioButton Q4_2 = (RadioButton) findViewById(R.id.radioButton2Q4);
+        RadioButton Q4_3 = (RadioButton) findViewById(R.id.radioButton3Q4);
+        //Q5
+        RadioButton Q5_1 = (RadioButton) findViewById(R.id.radioButton1Q5);
+        final RadioButton Q5_2 = (RadioButton) findViewById(R.id.radioButton2Q5);
+        RadioButton Q5_3 = (RadioButton) findViewById(R.id.radioButton3Q5);
+
+        //get name from intent
+        Intent intent = getIntent();
+        name = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        //get name and score from intent
+        String[] nameScore = {"",""};
+        //Split on the message from the quiz activity
+        nameScore = name.split(",");
+        //set name
+        name = nameScore[0];
+
+        //call makeQs method
+        makeQs();
+
+        //assigns the questions and answers to the textViews
+        //Q1
+        textViewQ1.setText(ques[0].getQUESTION());
+        Q1_1.setText(ques[0].getOPTA());
+        Q1_2.setText(ques[0].getOPTB());
+        Q1_3.setText(ques[0].getOPTC());
+        //Q2
+        textViewQ2.setText(ques[1].getQUESTION());
+        Q2_1.setText(ques[1].getOPTA());
+        Q2_2.setText(ques[1].getOPTB());
+        Q2_3.setText(ques[1].getOPTC());
+        //Q3
+        textViewQ3.setText(ques[2].getQUESTION());
+        Q3_1.setText(ques[2].getOPTA());
+        Q3_2.setText(ques[2].getOPTB());
+        Q3_3.setText(ques[2].getOPTC());
+        //Q4
+        textViewQ4.setText(ques[3].getQUESTION());
+        Q4_1.setText(ques[3].getOPTA());
+        Q4_2.setText(ques[3].getOPTB());
+        Q4_3.setText(ques[3].getOPTC());
+        //Q5
+        textViewQ5.setText(ques[4].getQUESTION());
+        Q5_1.setText(ques[4].getOPTA());
+        Q5_2.setText(ques[4].getOPTB());
+        Q5_3.setText(ques[4].getOPTC());
+
+        //get submit button
+        submitButton = (Button) findViewById(R.id.buttonSubmit);
+        //set submit button's text
+        submitButton.setText("Submit");
+        //set code on click
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                //reset score
+                score = 0;
+                //check answers
+                if (Q1.getCheckedRadioButtonId() == Q1_2.getId())
+                {
+                    score += 10;
+                }
+                if (Q2.getCheckedRadioButtonId() == Q2_2.getId())
+                {
+                    score += 10;
+                }
+                if (Q3.getCheckedRadioButtonId() == Q3_3.getId())
+                {
+                    score += 10;
+                }
+                if (Q4.getCheckedRadioButtonId() == Q4_1.getId())
+                {
+                    score += 10;
+                }
+                if (Q5.getCheckedRadioButtonId() == Q5_2.getId())
+                {
+                    score += 10;
+                }
+
+                //take away point for cheats
+                score -= (cheats*10);
+
+                //check score
+                if (score < 0)
+                {
+                    score = 0;
+                }
+
+                //Goto leaderboard, send name + score
+                Intent intent = new Intent(view.getContext(), LeaderboardActivity.class);
+                String message = name + "," + score;
+                intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(intent);
+            }
+        });
+
+        //make cheat buttons
+        buttonCheat1 = (Button) findViewById(R.id.buttonCheat1);
+        //set cheat button's text
+        buttonCheat1.setText("Cheat");
+        //set code on click
+        buttonCheat1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if (!c1) {
+                    cheats++;
+                    c1 = true;
+                    textViewCheat1.setText("81");
+                }
+            }
+        });
+        buttonCheat2 = (Button) findViewById(R.id.buttonCheat2);
+        //set cheat button's text
+        buttonCheat2.setText("Cheat");
+        //set code on click
+        buttonCheat2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if (!c2) {
+                    cheats++;
+                    c2 = true;
+                    textViewCheat2.setText("47");
+                }
+            }
+        });
+        buttonCheat3 = (Button) findViewById(R.id.buttonCheat3);
+        //set cheat button's text
+        buttonCheat3.setText("Cheat");
+        //set code on click
+        buttonCheat3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if (!c3) {
+                    cheats++;
+                    c3 = true;
+                    textViewCheat3.setText("22");
+                }
+            }
+        });
+        buttonCheat4 = (Button) findViewById(R.id.buttonCheat4);
+        //set cheat button's text
+        buttonCheat4.setText("Cheat");
+        //set code on click
+        buttonCheat4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if (!c4) {
+                    cheats++;
+                    c4 = true;
+                    textViewCheat4.setText("33");
+                }
+            }
+        });
+        buttonCheat5 = (Button) findViewById(R.id.buttonCheat5);
+        //set cheat button's text
+        buttonCheat5.setText("Cheat");
+        //set code on click
+        buttonCheat5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if (!c5) {
+                    cheats++;
+                    c5 = true;
+                    textViewCheat5.setText("84");
+                }
+            }
+        });
+
+    }
+
+
+    // method to make the questions and store them in an array
+    public void makeQs(){
+
+        ques[0] = new Question("What is 42 + 39","71","81","77","81");
+        ques[1] = new Question("What is 18 + 29","36","47","37","47");
+        ques[2] = new Question("What is 87 - 65","25","31","22","22");
+        ques[3] = new Question("What is 78 - 45","33","23","28","33");
+        ques[4] = new Question("What is 14 x 6","88","84","82","84");
+
+    }
+
+}
